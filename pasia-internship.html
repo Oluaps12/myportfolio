@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PASIA Internship Accomplishments | Paulo F. - Computer Engineer & AI Developer</title>
+
+  <!-- Google Fonts matching index.html -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700;900&family=Outfit:wght@800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Main stylesheet from index.html -->
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Specific Hero Header for PASIA Internship Page */
+    .pasia-hero-container {
+      padding: 160px 40px 60px;
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .pasia-hero-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--cyan-accent);
+      background: rgba(112, 243, 255, 0.1);
+      border: 1px solid var(--cyan-border);
+      padding: 6px 16px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .pasia-hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 1.08;
+      text-transform: uppercase;
+      color: var(--text-white);
+      text-shadow: var(--text-shadow-glow), 0 4px 20px rgba(0, 0, 0, 0.9);
+      margin-bottom: 20px;
+    }
+
+    .pasia-hero-desc {
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 760px;
+      margin: 0 auto 30px;
+      font-weight: 500;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Performance HUD Strip */
+    .pasia-metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto 80px;
+      padding: 0 40px;
+    }
+
+    .pasia-metric-card {
+      background: rgba(11, 15, 23, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--cyan-border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .pasia-metric-val {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 38px;
+      color: var(--cyan-accent);
+      line-height: 1;
+      margin-bottom: 6px;
+      text-shadow: 0 0 12px var(--cyan-glow);
+    }
+
+    .pasia-metric-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text-white);
+      text-transform: uppercase;
+    }
+
+    /* Page Footer */
+    .pasia-footer {
+      padding: 60px 40px 80px;
+      text-align: center;
+      border-top: 1px solid var(--cyan-border);
+      background: rgba(11, 15, 23, 0.8);
+      backdrop-filter: blur(14px);
+      margin-top: 100px;
+    }
+
+    .pasia-footer-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      color: var(--text-white);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .pasia-footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .pasia-footer-links a {
+      color: var(--cyan-accent);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      transition: opacity 0.3s ease;
+    }
+
+    .pasia-footer-links a:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Fixed Full-Screen Canvas Background (Identical to index.html) -->
+  <div id="canvas-container">
+    <canvas id="hero-canvas"></canvas>
+  </div>
+
+  <!-- Content Overlay Layer -->
+  <div id="content-overlay">
+    <!-- Navbar (Identical to index.html style) -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <a href="index.html" style="color:inherit;text-decoration:none;">PAULO F.</a>
+        <span style="font-size:11px;color:var(--cyan-accent);margin-left:8px;letter-spacing:0.12em;">// PASIA
+          INTERNSHIP</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#row-1">Tasks</a>
+        <a href="#row-2">What I do </a>
+        <a href="#row-3">What I've built</a>
+        <a href="#row-4">I learned</a>
+      </nav>
+      <div class="nav-right">
+        <a href="index.html" class="nav-contact-link">← MAIN PORTFOLIO</a>
+        <span class="lang-tag">EN</span>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main style="position: relative; z-index: 1;">
+      <!-- Hero Header Section -->
+      <div class="pasia-hero-container">
+        <div class="pasia-hero-badge">SOLUTION INTERN // PROCUREMENT & SUPPLY INSTITUTE OF ASIA</div>
+        <h1 class="pasia-hero-title">PASIA INTERNSHIP<br>ACCOMPLISHMENTS</h1>
+      </div>
+
+      <!-- Performance Metrics HUD Strip -->
+      <div class="pasia-metrics-strip">
+        <div class="pasia-metric-card">
+          <div class="pasia-metric-val">98.4%</div>
+          <div class="pasia-metric-lbl">Categorization Precision</div>
+        </div>
+        <div class="pasia-metric-card">
+          <div class="pasia-metric-val">100K+</div>
+          <div class="pasia-metric-lbl">Spend Records Processed</div>
+        </div>
+        <div class="pasia-metric-card">
+          <div class="pasia-metric-val">&lt;45ms</div>
+          <div class="pasia-metric-lbl">Inference Latency</div>
+        </div>
+        <div class="pasia-metric-card">
+          <div class="pasia-metric-val">85%</div>
+          <div class="pasia-metric-lbl">Manual Effort Saved</div>
+        </div>
+      </div>
+
+      <!-- 4 Showcase Rows (Matching index.html Design System) -->
+      <section class="showcase-section">
+
+        <!-- ROW 1: Automated Spend Categorization (Media Left, Text Right) -->
+        <div id="row-1" class="showcase-row">
+          <div class="showcase-media collage-1">
+            <div class="collage-card main-orange">
+              <img src="pasiaPicture/pasia1.jpg" alt="PASIA Solution Intern Banner">
+              <div class="jp-header-overlay">PASIA CORE</div>
+            </div>
+            <div class="collage-card sub-bw">
+              <img src="pasiaPicture/pasia2.jpg" alt="Data Analytics">
+              <div class="jp-header-overlay small">分析エンジン</div>
+            </div>
+            <div class="collage-card thumb-badge">
+              <img src="pasiaPicture/pasia3.jpg" alt="ML Setup">
+              <div class="badge-overlay-title">98.4% Precision</div>
+            </div>
+          </div>
+
+          <div class="showcase-text">
+            <h2 class="showcase-title">Tasks and Responsibilities During My Internship</h2>
+            <div class="showcase-line"></div>
+            <p class="showcase-desc">
+              I mapped out DTI's supply chain processes and applied insights from meetings directly into our project
+              documentation and planning.<br><br>
+              I standardized and categorized inventory items for both MDC and ALI, helping create a more consistent
+              and organized data framework for each.<br><br>
+              I researched and compiled contact information for companies in the Subic area to support outreach for an
+              upcoming seminar.<br><br>
+              I helped gather eBooks and reference materials on supply chain digitalization to support the team's
+              research efforts.<br><br>
+              I handled email communications for the ALI supplier survey, coordinating outreach to suppliers.<br><br>
+              I authored a concept paper for DTI, outlining project objectives and strategies, and revised it based on
+              feedback from my supervisor.
+            </p>
+            <a href="#row-2" class="showcase-btn">What I do ↓</a>
+          </div>
+        </div>
+
+        <!-- ROW 2: NLP Data Sanitization & Normalization (Text Left, Media Right - Reversed Row) -->
+        <div id="row-2" class="showcase-row reverse">
+          <div class="showcase-text">
+            <h2 class="showcase-title">As a Computer Engineering Student</h2>
+            <div class="showcase-line"></div>
+            <p class="showcase-desc">
+              Even though most of my given tasks weren't directly aligned with computer engineering, I used my technical
+              knowledge to find ways to streamline my work, applying Python scripting to automate tasks that were
+              originally manual.<br><br>
+              I developed a Python script using smtplib to automate the sending of bulk emails, streamlining what used
+              to be a manual, repetitive task.<br><br>
+              I built automation scripts using pandas and other Python libraries to categorize and process supply
+              chain data more efficiently.<br><br>
+              I strengthened my programming skills by translating manual business processes into automated,
+              code-based solutions.<br><br>
+              I saw firsthand how automation reduces human error and saves time in data-heavy tasks like
+              categorization and sending emails.
+            </p>
+            <a href="#row-3" class="showcase-btn">What I've realized ↓</a>
+          </div>
+
+          <div class="showcase-media collage-2">
+            <div class="collage-card main-bw">
+              <img src="pasiaPicture/pasia4.jpg" alt="NLP Architecture">
+              <div class="jp-header-overlay">TF-IDF NLP</div>
+            </div>
+            <div class="collage-card thumb-bw">
+              <img src="pasiaPicture/pasia5.jpg" alt="NLP Feature Extraction">
+              <div class="badge-overlay-title">N-Gram Vector</div>
+            </div>
+            <div class="collage-card bottom-orange">
+              <img src="pasiaPicture/pasia6.jpg" alt="Data Analytics Pipeline">
+              <div class="jp-header-overlay small">自然言語処理</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 3: High-Performance REST API Microservices (Media Left, Text Right) -->
+        <div id="row-3" class="showcase-row">
+          <div class="showcase-media collage-3">
+            <div class="collage-card main-sketch">
+              <img src="pasiaPicture/pasia7.jpg" alt="System Presentation">
+              <div class="jp-header-overlay">API CORE</div>
+            </div>
+            <div class="collage-card sub-orange">
+              <img src="pasiaPicture/pasia8.jpg" alt="Team Collaboration">
+              <div class="jp-header-overlay small">高速処理</div>
+            </div>
+            <div class="collage-card thumb-badge">
+              <img src="pasiaPicture/pasia9.jpg" alt="System Metrics">
+              <div class="badge-overlay-title">&lt;45ms Inference</div>
+            </div>
+          </div>
+
+          <div class="showcase-text">
+            <h2 class="showcase-title">Why I Love Automation</h2>
+            <div class="showcase-line"></div>
+            <p class="showcase-desc">
+              I realized that automation isn't just about saving time — it's about freeing up mental space to focus on
+              more meaningful, higher-level problems instead of repetitive tasks.<br><br>
+              I discovered a genuine sense of fulfillment in seeing a script run and instantly accomplish what used to
+              take hours of manual work.<br><br>
+              I learned that even small inefficiencies, when automated, can lead to significant improvements in accuracy
+              and consistency over time.<br><br>
+              I found myself naturally drawn to spotting repetitive processes and thinking, "this could be automated" —
+              which made me appreciate how much I enjoy problem-solving through code.<br><br>
+              I came to understand that automation reflects my strength and passion as a computer engineer — turning
+              manual, error-prone tasks into reliable, efficient systems.
+            </p>
+            <a href="#row-4" class="showcase-btn">What I've learned ↓</a>
+          </div>
+        </div>
+
+        <!-- ROW 4: Executive Analytics & Business Impact (Text Left, Media Right - Reversed Row) -->
+        <div id="row-4" class="showcase-row reverse">
+          <div class="showcase-text">
+            <h2 class="showcase-title">Conclusion</h2>
+            <div class="showcase-line"></div>
+            <p class="showcase-desc">
+              Overall, my internship at PASIA gave me a well-rounded experience that went beyond just completing
+              assigned tasks. While much of the work — supply chain mapping, item standardization, research, and
+              communication — wasn't directly tied to my field as a computer engineer, it gave me valuable insight into
+              real-world business operations and taught me how to adapt and contribute meaningfully in any environment.
+              More importantly, it reaffirmed my passion for automation and technology. By applying Python scripting to
+              streamline manual processes, I was able to bring value to the team while also growing as a computer
+              engineer. This internship not only strengthened my technical and professional skills but also gave me
+              clarity on the kind of work I genuinely enjoy and want to pursue moving forward.
+            </p>
+            <a href="index.html#contact" class="showcase-btn">GET IN TOUCH WITH PAULO</a>
+          </div>
+
+          <div class="showcase-media collage-4">
+            <div class="collage-card main-orange">
+              <img src="pasiaPicture/pasia10.jpg" alt="Paulo Fesalbon Solution Intern">
+              <div class="jp-header-overlay">PAULO F.</div>
+            </div>
+            <div class="collage-card thumb-bw">
+              <img src="pasiaPicture/pasia11.jpg" alt="Analytics Station">
+              <div class="badge-overlay-title">PASIA INTERN</div>
+            </div>
+            <div class="collage-card bottom-bw">
+              <img src="pasiaPicture/pasia12.jpg" alt="Awards & Recognitions">
+              <div class="jp-header-overlay small">成果と貢献</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Footer Section matching index.html -->
+      <footer class="pasia-footer">
+        <h2 class="pasia-footer-title">PAULO F. // PASIA INTERNSHIP</h2>
+        <div class="pasia-footer-links">
+          <a href="index.html">MAIN PORTFOLIO</a>
+          <a href="index.html#about">ABOUT PAULO</a>
+          <a href="index.html#projects">PROJECTS</a>
+          <a href="mailto:paulotfesalbon12@gmail.com">CONTACT EMAIL</a>
+        </div>
+        <p style="font-size: 12px; color: rgba(255,255,255,0.5);">
+          © 2026 PAULO FESALBON | COMPUTER ENGINEER & AI SYSTEMS DEVELOPER
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Minimal Loader matching index.html -->
+  <div id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-bar-container">
+      <div id="loader-bar"></div>
+    </div>
+    <div id="loader-text">Loading 0%</div>
+  </div>
+
+  <!-- Main JavaScript driving background canvas animation (Identical to index.html) -->
+  <script src="main.js"></script>
+</body>
+
+</html>
