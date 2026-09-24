@@ -12,3 +12,16 @@ desktop.ini
 
 # Node modules (if any)
 node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+*.log
+backend/rag_log.json

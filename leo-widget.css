@@ -1,0 +1,1028 @@
+/* ==========================================================================
+   MANGA AI CHAT WIDGET - STYLESHEET
+   Authentic Japanese Shonen Manga / Comic Book Panel Theme
+   Strictly isolated to the AI Chat Widget component
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Cinzel:wght@600;700;800&family=Comic+Neue:ital,wght@0,400;0,700;1,700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  --manga-paper: #faf4e6;
+  --manga-paper-dark: #f0e6ce;
+  --manga-paper-light: #ffffff;
+  --manga-ink: #111111;
+  --manga-ink-soft: #2a2a2a;
+  --manga-ink-muted: #555555;
+  --manga-border-thick: 3.5px solid #111111;
+  --manga-border-mid: 2.5px solid #111111;
+  --manga-border-thin: 1.5px solid #111111;
+  --manga-shadow: 6px 6px 0px #111111;
+  --manga-shadow-sm: 3px 3px 0px #111111;
+  --manga-shadow-lg: 10px 10px 0px #111111;
+  
+  --manga-font-comic: 'Bangers', 'Comic Neue', cursive, sans-serif;
+  --manga-font-serif: 'Cinzel', serif;
+  --manga-font-speech: 'Comic Neue', cursive, sans-serif;
+  --manga-font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --leo-z-index: 999999;
+}
+
+/* ==========================================================================
+   1. FLOATING LAUNCHER BUTTON (Closed State)
+   ========================================================================== */
+#leo-launcher {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--manga-paper);
+  border: var(--manga-border-thick);
+  box-shadow: var(--manga-shadow), 0 12px 28px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  z-index: var(--leo-z-index);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  outline: none;
+  padding: 0;
+  overflow: visible;
+}
+
+#leo-launcher:hover {
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 8px 8px 0px #111111, 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+#leo-launcher:active {
+  transform: scale(0.95) translate(3px, 3px);
+  box-shadow: 2px 2px 0px #111111;
+}
+
+.leo-launcher-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.leo-launcher-icon {
+  width: 34px;
+  height: 34px;
+  fill: var(--manga-ink);
+  display: none;
+}
+
+/* Manga "CHAT!" sound sticker badge on launcher */
+.leo-launcher-zap-badge {
+  position: absolute;
+  top: -12px;
+  right: -14px;
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  font-family: var(--manga-font-comic);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  color: var(--manga-ink);
+  padding: 1px 7px;
+  border-radius: 4px;
+  transform: rotate(12deg);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+#leo-launcher:hover .leo-launcher-zap-badge {
+  transform: rotate(18deg) scale(1.1);
+}
+
+/* Status Indicator Dot */
+.leo-status-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #64748B;
+  border: 2.5px solid #111111;
+  box-shadow: 1px 1px 0px #111111;
+  transition: background-color 0.3s ease;
+}
+
+.leo-status-badge.connected { background: #10B981; }
+.leo-status-badge.listening { background: #00E5FF; }
+.leo-status-badge.thinking { background: #F59E0B; }
+.leo-status-badge.speaking { background: #A855F7; }
+
+/* Tooltip */
+.leo-launcher-tooltip {
+  position: absolute;
+  right: calc(100% + 16px);
+  background: var(--manga-paper);
+  color: var(--manga-ink);
+  font-family: var(--manga-font-comic);
+  font-size: 16px;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.25s ease;
+}
+
+#leo-launcher:hover .leo-launcher-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   2. MAIN MANGA CHAT WIDGET CONTAINER
+   ========================================================================== */
+#leo-widget-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 520px;
+  max-width: calc(100vw - 36px);
+  max-height: calc(100vh - 50px);
+  background: var(--manga-paper);
+  border: var(--manga-border-thick);
+  border-radius: 12px;
+  box-shadow: var(--manga-shadow-lg), 0 20px 48px rgba(0, 0, 0, 0.4);
+  z-index: var(--leo-z-index);
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* Allows ZAP! and top banner to pop out */
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--manga-font-body);
+  color: var(--manga-ink);
+  user-select: none;
+}
+
+#leo-widget-container.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   3. TOP BANNER & ACTION HEADER
+   ========================================================================== */
+.manga-header-bar {
+  position: relative;
+  padding: 14px 18px 8px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--manga-paper);
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  overflow: visible;
+}
+
+/* "JUJUTSU CHAT CHRONICLE!" Caption Box */
+.manga-title-banner {
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  padding: 5px 18px 4px 18px;
+  transform: rotate(-1.5deg) translateY(-4px);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.manga-title-banner:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.manga-title-banner h2 {
+  font-family: var(--manga-font-comic);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin: 0;
+  color: var(--manga-ink);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Top Right Header Controls */
+.manga-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.manga-icon-btn {
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  color: var(--manga-ink);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.18s ease;
+}
+
+.manga-icon-btn:hover {
+  background: var(--manga-paper-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #111111;
+}
+
+.manga-icon-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #111111;
+}
+
+.manga-icon-btn.active {
+  background: #111111;
+  color: #ffffff;
+}
+
+.manga-icon-btn svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+}
+
+/* ==========================================================================
+   4. UPPER STORYBOARD PANELS (FWUUSH! / BUBBLE / ZAP!)
+   ========================================================================== */
+.manga-storyboard-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr 1.1fr;
+  border-top: var(--manga-border-thick);
+  border-bottom: var(--manga-border-thick);
+  background: var(--manga-paper);
+  min-height: 142px;
+  position: relative;
+  overflow: hidden;
+}
+
+.manga-subpanel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.manga-subpanel:not(:last-child) {
+  border-right: var(--manga-border-thick);
+}
+
+/* Left Panel: Speed lines radiating + FWUUSH! burst */
+.manga-subpanel-left {
+  background: 
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      var(--manga-paper) 0deg 9deg,
+      #ebdcb9 9deg 12deg,
+      var(--manga-paper) 12deg 21deg
+    );
+}
+
+.manga-burst-star {
+  position: relative;
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  padding: 8px 12px;
+  clip-path: polygon(
+    0% 35%, 15% 35%, 10% 15%, 35% 20%, 45% 0%, 55% 20%, 80% 12%, 75% 35%,
+    100% 38%, 85% 55%, 100% 75%, 75% 72%, 65% 100%, 50% 82%, 30% 98%,
+    32% 72%, 0% 75%, 12% 55%
+  );
+  transform: rotate(-7deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 90px;
+  box-sizing: border-box;
+  animation: manga-subtle-pulse 3s infinite alternate ease-in-out;
+}
+
+.manga-burst-text {
+  font-family: var(--manga-font-comic);
+  font-size: 24px;
+  letter-spacing: 1px;
+  color: var(--manga-ink);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+/* Center Panel: Halftone screentone dots + Jagged speech bubble */
+.manga-subpanel-center {
+  background-color: var(--manga-paper);
+  background-image: radial-gradient(var(--manga-ink) 1.25px, transparent 1.25px);
+  background-size: 7px 7px;
+}
+
+.manga-jagged-bubble {
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  padding: 10px 14px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  max-width: 130px;
+  text-align: center;
+}
+
+/* Jagged spikes around bubble via pseudo-element */
+.manga-jagged-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  left: 30%;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 9px solid var(--manga-ink);
+}
+
+.manga-bubble-text {
+  font-family: var(--manga-font-speech);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--manga-ink);
+  margin: 0;
+  text-transform: none;
+}
+
+/* Right Panel: Diagonal action hatch lines + thought bubble + ZAP! */
+.manga-subpanel-right {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--manga-paper),
+    var(--manga-paper) 5px,
+    rgba(0, 0, 0, 0.08) 5px,
+    rgba(0, 0, 0, 0.08) 8px
+  );
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manga-ellipsis-bubble {
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 18px;
+  padding: 3px 14px 5px 14px;
+  font-family: var(--manga-font-comic);
+  font-size: 20px;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: var(--manga-ink);
+  position: relative;
+}
+
+.manga-ellipsis-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 25%;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border: var(--manga-border-thin);
+  border-radius: 50%;
+}
+
+.manga-mini-zap {
+  font-family: var(--manga-font-comic);
+  font-size: 26px;
+  letter-spacing: 1px;
+  color: var(--manga-ink);
+  transform: rotate(14deg);
+  text-shadow: 2px 2px 0 #ffffff;
+  margin-top: -4px;
+}
+
+@keyframes manga-subtle-pulse {
+  0% { transform: rotate(-7deg) scale(0.98); }
+  100% { transform: rotate(-5deg) scale(1.03); }
+}
+
+/* ==========================================================================
+   5. LOWER DIALOGUE & CHARACTER SECTION
+   ========================================================================== */
+.manga-dialogue-section {
+  padding: 14px 18px 10px 18px;
+  background: var(--manga-paper);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Character Header: "Satoru Gojo" */
+.manga-char-header {
+  text-align: center;
+  padding-bottom: 2px;
+}
+
+.manga-char-name {
+  font-family: var(--manga-font-serif);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: var(--manga-ink);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.manga-char-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--manga-ink-soft);
+  margin-top: 1px;
+}
+
+.manga-flourish-symbol {
+  font-family: serif;
+  font-size: 14px;
+  color: var(--manga-ink-muted);
+}
+
+.manga-char-subtitle {
+  font-style: italic;
+  font-family: var(--manga-font-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Dialogue Content & Gojo Portrait Layout */
+.manga-dialogue-body {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  min-height: 120px;
+}
+
+.manga-dialogue-box {
+  flex: 1;
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.manga-quote-text {
+  font-family: var(--manga-font-serif);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--manga-ink);
+  margin: 0;
+  word-break: break-word;
+  max-height: 110px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Custom mini scrollbar */
+.manga-quote-text::-webkit-scrollbar {
+  width: 4px;
+}
+.manga-quote-text::-webkit-scrollbar-thumb {
+  background: #111;
+  border-radius: 2px;
+}
+
+/* Dynamic Typing Cursor */
+.leo-typing-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background: #111111;
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: manga-cursor-blink 0.7s infinite;
+}
+
+@keyframes manga-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Gojo Manga Ink Portrait */
+.manga-portrait-wrap {
+  width: 110px;
+  height: 120px;
+  flex-shrink: 0;
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: var(--manga-shadow-sm);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.manga-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* ==========================================================================
+   6. BOTTOM AUDIO EQUALIZER & CONTROLS STRIP
+   ========================================================================== */
+.manga-bottom-bar {
+  border-top: var(--manga-border-thick);
+  background: var(--manga-paper);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  border-bottom-left-radius: 9px;
+  border-bottom-right-radius: 9px;
+}
+
+/* User / Traveler Avatar Badge */
+.manga-user-badge {
+  width: 44px;
+  height: 44px;
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.manga-user-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Waveform Visualizer & Status Text */
+.manga-waveform-container {
+  flex: 1;
+  height: 42px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+#leo-visualizer {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.manga-status-overlay {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--manga-font-comic);
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  color: var(--manga-ink-muted);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.manga-status-overlay.active {
+  color: #111111;
+  font-weight: 700;
+}
+
+/* Manga Circular Action Buttons (Mic, Speaker, Interrupt) */
+.manga-action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.manga-circle-btn {
+  background: var(--manga-paper-light);
+  border: var(--manga-border-mid);
+  box-shadow: 2.5px 2.5px 0px #111111;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  color: var(--manga-ink);
+  transition: all 0.18s ease;
+}
+
+.manga-circle-btn:hover {
+  background: var(--manga-paper-dark);
+  transform: translate(-1px, -1px);
+  box-shadow: 3.5px 3.5px 0px #111111;
+}
+
+.manga-circle-btn:active {
+  transform: translate(1.5px, 1.5px);
+  box-shadow: 1px 1px 0px #111111;
+}
+
+/* Big Microphone Button */
+.manga-mic-btn {
+  width: 48px;
+  height: 48px;
+}
+
+.manga-mic-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.3;
+}
+
+.manga-mic-btn.active {
+  background: #111111;
+  color: #ffffff;
+  animation: manga-mic-pulse 1.4s infinite alternate ease-in-out;
+}
+
+.manga-mic-btn.muted {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+@keyframes manga-mic-pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+/* Speaker Button */
+.manga-speaker-btn {
+  width: 42px;
+  height: 42px;
+}
+
+.manga-speaker-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
+}
+
+.manga-speaker-btn.muted {
+  color: #94a3b8;
+  background: #f1f5f9;
+}
+
+/* Interrupt Button */
+.leo-interrupt-btn {
+  background: #ef4444;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  color: #ffffff;
+  font-family: var(--manga-font-comic);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  display: none; /* Shown only when AI is speaking */
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.leo-interrupt-btn:hover {
+  background: #dc2626;
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px #111111;
+}
+
+/* ==========================================================================
+   7. OVERLAPPING "ZAP!" SOUND STICKER (Bottom-Left)
+   ========================================================================== */
+.manga-zap-sticker {
+  position: absolute;
+  bottom: -16px;
+  left: -14px;
+  background: var(--manga-paper-light);
+  border: var(--manga-border-thick);
+  box-shadow: var(--manga-shadow-sm);
+  font-family: var(--manga-font-comic);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--manga-ink);
+  padding: 1px 12px;
+  border-radius: 4px;
+  transform: rotate(-14deg);
+  pointer-events: none;
+  z-index: 10;
+  text-shadow: 1px 1px 0 #ffffff;
+  transition: transform 0.2s ease;
+}
+
+#leo-widget-container:hover .manga-zap-sticker {
+  transform: rotate(-10deg) scale(1.05);
+}
+
+/* ==========================================================================
+   8. COLLAPSIBLE TEXT INPUT ROW & SETTINGS DRAWER
+   ========================================================================== */
+.manga-text-input-drawer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 18px;
+  background: var(--manga-paper-dark);
+  border-top: 0 solid #111;
+  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
+}
+
+.manga-text-input-drawer.visible {
+  max-height: 70px;
+  padding: 8px 18px;
+  border-top: var(--manga-border-mid);
+}
+
+.manga-text-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.manga-text-field {
+  flex: 1;
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--manga-font-body);
+  font-size: 13px;
+  color: var(--manga-ink);
+  outline: none;
+}
+
+.manga-text-field:focus {
+  border-color: #000;
+  box-shadow: 3px 3px 0px #111111;
+}
+
+.manga-send-btn {
+  background: #111111;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+  padding: 0;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.manga-send-btn:hover {
+  background: #333333;
+  transform: translate(-1px, -1px);
+}
+
+.manga-send-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Settings Panel (WebSocket Bridge Config) */
+.manga-settings-drawer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 18px;
+  background: var(--manga-paper-dark);
+  border-top: 0 solid #111;
+  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
+  font-size: 12px;
+}
+
+.manga-settings-drawer.open {
+  max-height: 160px;
+  padding: 10px 18px;
+  border-top: var(--manga-border-mid);
+}
+
+.manga-settings-label {
+  font-family: var(--manga-font-comic);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--manga-ink);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.manga-settings-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.manga-settings-input {
+  flex: 1;
+  background: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--manga-ink);
+  outline: none;
+}
+
+.manga-save-btn {
+  background: #111111;
+  color: #ffffff;
+  border: var(--manga-border-mid);
+  box-shadow: 2px 2px 0px #111111;
+  border-radius: 6px;
+  padding: 0 14px;
+  font-family: var(--manga-font-comic);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.manga-save-btn:hover {
+  background: #333333;
+}
+
+.manga-settings-hint {
+  font-size: 10px;
+  color: var(--manga-ink-muted);
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* ==========================================================================
+   9. CONVERSATION HISTORY DRAWER (Optional Scrollable Log)
+   ========================================================================== */
+.manga-history-drawer {
+  max-height: 0;
+  overflow-y: auto;
+  background: #f6eedb;
+  border-top: 0 solid #111;
+  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
+  padding: 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manga-history-drawer.open {
+  max-height: 150px;
+  padding: 10px 18px;
+  border-top: var(--manga-border-mid);
+}
+
+.manga-history-entry {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #111;
+  background: #ffffff;
+  box-shadow: 1.5px 1.5px 0 #111;
+}
+
+.manga-history-entry.user {
+  align-self: flex-end;
+  background: #e0f2fe;
+}
+
+.manga-history-entry.ai {
+  align-self: flex-start;
+  background: #ffffff;
+}
+
+.manga-history-speaker {
+  font-family: var(--manga-font-comic);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--manga-ink);
+  margin-bottom: 2px;
+}
+
+/* ==========================================================================
+   10. RESPONSIVE MOBILE ADAPTATIONS
+   ========================================================================== */
+@media (max-width: 580px) {
+  #leo-widget-container {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100vh - 24px);
+    border-radius: 10px;
+  }
+
+  .manga-title-banner h2 {
+    font-size: 20px;
+  }
+
+  .manga-storyboard-grid {
+    min-height: 110px;
+  }
+
+  .manga-burst-star {
+    width: 90px;
+    height: 75px;
+  }
+
+  .manga-burst-text {
+    font-size: 18px;
+  }
+
+  .manga-bubble-text {
+    font-size: 11px;
+  }
+
+  .manga-mini-zap {
+    font-size: 20px;
+  }
+
+  .manga-char-name {
+    font-size: 18px;
+  }
+
+  .manga-portrait-wrap {
+    width: 90px;
+    height: 100px;
+  }
+
+  .manga-quote-text {
+    font-size: 12px;
+  }
+
+  .manga-mic-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .manga-speaker-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .manga-zap-sticker {
+    font-size: 24px;
+    bottom: -12px;
+    left: -8px;
+  }
+}
