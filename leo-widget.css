@@ -1,1028 +1,1014 @@
 /* ==========================================================================
-   MANGA AI CHAT WIDGET - STYLESHEET
-   Authentic Japanese Shonen Manga / Comic Book Panel Theme
-   Strictly isolated to the AI Chat Widget component
+   MINIMAL SPEECH-TO-SPEECH AI COMPANION - STYLESHEET
+   Clean, Softly Glowing Anime-Cute Voice Assistant
+   Matches Dark Navy / Cyan Portfolio Theme
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Cinzel:wght@600;700;800&family=Comic+Neue:ital,wght@0,400;0,700;1,700&family=Space+Grotesk:wght@500;600;700&display=swap');
-
 :root {
-  --manga-paper: #faf4e6;
-  --manga-paper-dark: #f0e6ce;
-  --manga-paper-light: #ffffff;
-  --manga-ink: #111111;
-  --manga-ink-soft: #2a2a2a;
-  --manga-ink-muted: #555555;
-  --manga-border-thick: 3.5px solid #111111;
-  --manga-border-mid: 2.5px solid #111111;
-  --manga-border-thin: 1.5px solid #111111;
-  --manga-shadow: 6px 6px 0px #111111;
-  --manga-shadow-sm: 3px 3px 0px #111111;
-  --manga-shadow-lg: 10px 10px 0px #111111;
-  
-  --manga-font-comic: 'Bangers', 'Comic Neue', cursive, sans-serif;
-  --manga-font-serif: 'Cinzel', serif;
-  --manga-font-speech: 'Comic Neue', cursive, sans-serif;
-  --manga-font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
-  --leo-z-index: 999999;
+  --companion-eye-color: #70F3FF;
+  --companion-glow-color: rgba(0, 240, 255, 0.4);
+  --orb-size: 72px;
+  --orb-glow-color: rgba(0, 240, 255, 0.45);
+  --companion-dark-bg: rgba(11, 15, 23, 0.88);
+  --companion-card-bg: rgba(14, 20, 32, 0.94);
+  --companion-border: rgba(112, 243, 255, 0.22);
+  --companion-border-hover: rgba(112, 243, 255, 0.55);
+  --companion-text-white: #ffffff;
+  --companion-text-dim: rgba(255, 255, 255, 0.65);
+  --companion-z-index: 999999;
 }
 
 /* ==========================================================================
-   1. FLOATING LAUNCHER BUTTON (Closed State)
+   1. FUTURISTIC FLOATING AI ORB LAUNCHER
    ========================================================================== */
 #leo-launcher {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
-  width: 68px;
-  height: 68px;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+  right: max(24px, env(safe-area-inset-right, 24px));
+  width: var(--orb-size, 72px);
+  height: var(--orb-size, 72px);
   border-radius: 50%;
-  background: var(--manga-paper);
-  border: var(--manga-border-thick);
-  box-shadow: var(--manga-shadow), 0 12px 28px rgba(0, 0, 0, 0.4);
+  background: transparent;
+  border: none;
   cursor: pointer;
-  z-index: var(--leo-z-index);
+  z-index: var(--companion-z-index);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
   outline: none;
   padding: 0;
-  overflow: visible;
+  user-select: none;
+  animation: orbIdleFloat 3.8s ease-in-out infinite;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Idle slow vertical bob (6px) */
+@keyframes orbIdleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Attention Move: quick playful hop & wiggle */
+@keyframes orbAttentionHop {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  20% {
+    transform: translateY(-11px) rotate(-6deg) scale(1.08);
+  }
+  45% {
+    transform: translateY(-3px) rotate(4deg) scale(1.04);
+  }
+  70% {
+    transform: translateY(-8px) rotate(-2deg) scale(1.03);
+  }
+}
+
+#leo-launcher.attention-move {
+  animation: orbAttentionHop 0.95s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Hover: scale 1.1, lift */
 #leo-launcher:hover {
-  transform: scale(1.08) rotate(-4deg);
-  box-shadow: 8px 8px 0px #111111, 0 16px 36px rgba(0, 0, 0, 0.5);
+  transform: scale(1.1) translateY(-2px);
+  animation-play-state: paused;
 }
 
+/* Press: squish scale 0.92, spring back */
 #leo-launcher:active {
-  transform: scale(0.95) translate(3px, 3px);
-  box-shadow: 2px 2px 0px #111111;
+  transform: scale(0.92);
+  transition-duration: 0.12s;
 }
 
-.leo-launcher-avatar {
+/* Focus ring for keyboard accessibility */
+#leo-launcher:focus-visible {
+  outline: 2px solid var(--companion-eye-color);
+  outline-offset: 6px;
+}
+
+/* Morph out when chat widget is open */
+#leo-launcher.widget-open {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.65) translateY(12px);
+}
+
+/* Radiating Sonar Ripple Rings */
+.leo-orb-sonar-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  object-fit: cover;
-  display: block;
-}
-
-.leo-launcher-icon {
-  width: 34px;
-  height: 34px;
-  fill: var(--manga-ink);
-  display: none;
-}
-
-/* Manga "CHAT!" sound sticker badge on launcher */
-.leo-launcher-zap-badge {
-  position: absolute;
-  top: -12px;
-  right: -14px;
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  font-family: var(--manga-font-comic);
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  color: var(--manga-ink);
-  padding: 1px 7px;
-  border-radius: 4px;
-  transform: rotate(12deg);
+  border: 1.5px solid var(--companion-eye-color);
+  opacity: 0;
   pointer-events: none;
-  transition: transform 0.2s ease;
+  z-index: 1;
+  animation: orbSonarRipple 3.2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
 }
 
-#leo-launcher:hover .leo-launcher-zap-badge {
-  transform: rotate(18deg) scale(1.1);
+.leo-orb-sonar-ring.delay {
+  animation-delay: 1.6s;
 }
 
-/* Status Indicator Dot */
-.leo-status-badge {
+@keyframes orbSonarRipple {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.85);
+    opacity: 0;
+  }
+}
+
+/* Orbiting 3D Neon Rings Container */
+.leo-orb-rings-container {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: #64748B;
-  border: 2.5px solid #111111;
-  box-shadow: 1px 1px 0px #111111;
-  transition: background-color 0.3s ease;
+  top: -12%;
+  left: -12%;
+  width: 124%;
+  height: 124%;
+  pointer-events: none;
+  perspective: 600px;
+  transform-style: preserve-3d;
+  z-index: 3;
 }
 
-.leo-status-badge.connected { background: #10B981; }
-.leo-status-badge.listening { background: #00E5FF; }
-.leo-status-badge.thinking { background: #F59E0B; }
-.leo-status-badge.speaking { background: #A855F7; }
+.leo-orb-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid rgba(112, 243, 255, 0.45);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+  transform-style: preserve-3d;
+}
 
-/* Tooltip */
+.leo-orb-ring.ring-1 {
+  transform: rotateX(66deg) rotateY(18deg) rotateZ(0deg);
+  animation: ringSpin 8s linear infinite;
+}
+
+.leo-orb-ring.ring-2 {
+  border-color: rgba(165, 243, 252, 0.32);
+  transform: rotateX(66deg) rotateY(-24deg) rotateZ(0deg);
+  animation: ringSpin 11s linear infinite reverse;
+}
+
+#leo-launcher:hover .leo-orb-ring.ring-1 {
+  animation-duration: 2.6s;
+  border-color: rgba(112, 243, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+#leo-launcher:hover .leo-orb-ring.ring-2 {
+  animation-duration: 3.4s;
+}
+
+#leo-launcher.attention-move .leo-orb-ring.ring-1 {
+  animation-duration: 1.2s;
+}
+
+@keyframes ringSpin {
+  from {
+    transform: rotateX(66deg) rotateY(18deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateX(66deg) rotateY(18deg) rotateZ(360deg);
+  }
+}
+
+/* Orbiting bright particle bead */
+.leo-ring-particle {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px #70F3FF, 0 0 14px #00E5FF;
+  transform: translateX(-50%);
+}
+
+/* Ambient Drifting Sparkles / Particles */
+.leo-orb-particles {
+  position: absolute;
+  top: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.leo-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px var(--companion-eye-color);
+  opacity: 0.6;
+}
+
+.leo-particle.p1 {
+  top: 15%;
+  left: 10%;
+  width: 2.5px;
+  height: 2.5px;
+  animation: particleFloat 4.2s ease-in-out infinite;
+}
+
+.leo-particle.p2 {
+  top: 80%;
+  left: 85%;
+  width: 2px;
+  height: 2px;
+  animation: particleFloat 3.6s ease-in-out infinite 1.2s;
+}
+
+.leo-particle.p3 {
+  top: 20%;
+  left: 82%;
+  width: 3px;
+  height: 3px;
+  animation: particleFloat 4.8s ease-in-out infinite 2.1s;
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(4px, -6px);
+    opacity: 0.85;
+  }
+}
+
+/* Glassy Sphere Body */
+.leo-orb-sphere {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, rgba(112, 243, 255, 0.28) 0%, rgba(13, 27, 42, 0.95) 55%, #070d18 100%);
+  border: 1.5px solid rgba(112, 243, 255, 0.38);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75),
+              0 0 25px var(--orb-glow-color),
+              inset 0 2px 4px rgba(255, 255, 255, 0.4),
+              inset 0 -4px 8px rgba(0, 229, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#leo-launcher:hover .leo-orb-sphere {
+  border-color: rgba(112, 243, 255, 0.75);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8),
+              0 0 38px rgba(0, 240, 255, 0.65),
+              inset 0 2px 6px rgba(255, 255, 255, 0.6),
+              inset 0 -4px 10px rgba(0, 229, 255, 0.35);
+}
+
+/* Hologram Scanline Shimmer */
+.leo-orb-hologram-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(112, 243, 255, 0.35) 50%, transparent 100%);
+  animation: orbHoloShimmer 5.5s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes orbHoloShimmer {
+  0% {
+    transform: translateY(-130%) rotate(25deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(220%) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Inner Specular Gloss Highlight */
+.leo-orb-gloss {
+  position: absolute;
+  top: 3px;
+  left: 14%;
+  width: 72%;
+  height: 38%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Interactive Cute Anime Face Canvas inside Launcher */
+.leo-launcher-face-canvas {
+  width: 54px;
+  height: 54px;
+  display: block;
+  pointer-events: none;
+  z-index: 7;
+}
+
+/* Status Indicator Dot on Orb Edge */
+.leo-launcher-status-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #070d18;
+  box-shadow: 0 0 8px #10B981;
+  z-index: 8;
+  animation: statusGlowPulse 2.8s ease-in-out infinite;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes statusGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px #10B981;
+  }
+  50% {
+    box-shadow: 0 0 12px #10B981, 0 0 18px rgba(16, 185, 129, 0.5);
+  }
+}
+
+.leo-launcher-status-dot.listening {
+  background: #00E5FF;
+  box-shadow: 0 0 10px #00E5FF;
+}
+
+.leo-launcher-status-dot.thinking {
+  background: #F59E0B;
+  box-shadow: 0 0 10px #F59E0B;
+}
+
+.leo-launcher-status-dot.speaking {
+  background: #C084FC;
+  box-shadow: 0 0 10px #C084FC;
+}
+
+.leo-launcher-status-dot.disconnected {
+  background: #64748B;
+  box-shadow: none;
+  animation: none;
+}
+
+/* Unread Notification Pulse (when reply arrives while closed) */
+#leo-launcher.has-unread .leo-orb-sphere {
+  animation: unreadPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes unreadPulse {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 25px var(--orb-glow-color);
+  }
+  50% {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 36px #00E5FF, 0 0 50px rgba(0, 229, 255, 0.6);
+    border-color: #00E5FF;
+  }
+}
+
+/* Caption Box Speech Bubble ("Heyy there! Want some help?") */
 .leo-launcher-tooltip {
   position: absolute;
   right: calc(100% + 16px);
-  background: var(--manga-paper);
-  color: var(--manga-ink);
-  font-family: var(--manga-font-comic);
-  font-size: 16px;
-  letter-spacing: 1px;
-  padding: 6px 14px;
-  border-radius: 6px;
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
+  top: 50%;
+  transform: translateY(-50%) scale(0.88);
+  background: rgba(11, 15, 23, 0.94);
+  border: 1px solid rgba(112, 243, 255, 0.45);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75), 0 0 22px rgba(0, 240, 255, 0.3);
+  border-radius: 14px;
+  padding: 10px 18px;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transform: translateX(10px);
-  transition: all 0.25s ease;
+  z-index: 10;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-#leo-launcher:hover .leo-launcher-tooltip {
+.leo-launcher-tooltip.visible {
   opacity: 1;
-  transform: translateX(0);
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+.leo-tooltip-text {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(112, 243, 255, 0.4);
+  display: inline-block;
+  min-height: 1.2em;
+}
+
+/* Speech bubble tail pointing right toward orb on desktop */
+.leo-tooltip-arrow {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: rgba(11, 15, 23, 0.94);
+  border-top: 1px solid rgba(112, 243, 255, 0.45);
+  border-right: 1px solid rgba(112, 243, 255, 0.45);
 }
 
 /* ==========================================================================
-   2. MAIN MANGA CHAT WIDGET CONTAINER
+   2. MAIN COMPANION WIDGET CONTAINER
    ========================================================================== */
 #leo-widget-container {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 520px;
-  max-width: calc(100vw - 36px);
-  max-height: calc(100vh - 50px);
-  background: var(--manga-paper);
-  border: var(--manga-border-thick);
-  border-radius: 12px;
-  box-shadow: var(--manga-shadow-lg), 0 20px 48px rgba(0, 0, 0, 0.4);
-  z-index: var(--leo-z-index);
+  bottom: 24px;
+  right: 24px;
+  width: 320px;
+  height: 390px;
+  border-radius: 28px;
+  background: var(--companion-card-bg);
+  border: 1px solid var(--companion-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 38px var(--companion-glow-color);
+  z-index: var(--companion-z-index);
   display: flex;
   flex-direction: column;
-  overflow: visible; /* Allows ZAP! and top banner to pop out */
+  overflow: hidden;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   opacity: 0;
-  transform: translateY(24px) scale(0.96);
   pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: var(--manga-font-body);
-  color: var(--manga-ink);
+  transform: scale(0.92) translateY(24px);
+  transform-origin: bottom right;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease;
   user-select: none;
+  outline: none;
 }
 
 #leo-widget-container.open {
   opacity: 1;
-  transform: translateY(0) scale(1);
   pointer-events: auto;
+  transform: scale(1) translateY(0);
 }
 
-/* ==========================================================================
-   3. TOP BANNER & ACTION HEADER
-   ========================================================================== */
-.manga-header-bar {
-  position: relative;
-  padding: 14px 18px 8px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: var(--manga-paper);
-  border-top-left-radius: 9px;
-  border-top-right-radius: 9px;
-  overflow: visible;
+#leo-widget-container:focus-visible {
+  outline: 1.5px solid var(--companion-border-hover);
 }
 
-/* "JUJUTSU CHAT CHRONICLE!" Caption Box */
-.manga-title-banner {
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
-  padding: 5px 18px 4px 18px;
-  transform: rotate(-1.5deg) translateY(-4px);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-left: 2px;
-  transition: transform 0.2s ease;
-}
-
-.manga-title-banner:hover {
-  transform: rotate(0deg) scale(1.02);
-}
-
-.manga-title-banner h2 {
-  font-family: var(--manga-font-comic);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  margin: 0;
-  color: var(--manga-ink);
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-/* Top Right Header Controls */
-.manga-header-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.manga-icon-btn {
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  color: var(--manga-ink);
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  transition: all 0.18s ease;
-}
-
-.manga-icon-btn:hover {
-  background: var(--manga-paper-dark);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px #111111;
-}
-
-.manga-icon-btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 1px 1px 0px #111111;
-}
-
-.manga-icon-btn.active {
-  background: #111111;
-  color: #ffffff;
-}
-
-.manga-icon-btn svg {
-  width: 17px;
-  height: 17px;
-  stroke: currentColor;
-}
-
-/* ==========================================================================
-   4. UPPER STORYBOARD PANELS (FWUUSH! / BUBBLE / ZAP!)
-   ========================================================================== */
-.manga-storyboard-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1.3fr 1.1fr;
-  border-top: var(--manga-border-thick);
-  border-bottom: var(--manga-border-thick);
-  background: var(--manga-paper);
-  min-height: 142px;
-  position: relative;
-  overflow: hidden;
-}
-
-.manga-subpanel {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.manga-subpanel:not(:last-child) {
-  border-right: var(--manga-border-thick);
-}
-
-/* Left Panel: Speed lines radiating + FWUUSH! burst */
-.manga-subpanel-left {
-  background: 
-    repeating-conic-gradient(
-      from 0deg at 50% 50%,
-      var(--manga-paper) 0deg 9deg,
-      #ebdcb9 9deg 12deg,
-      var(--manga-paper) 12deg 21deg
-    );
-}
-
-.manga-burst-star {
-  position: relative;
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
-  padding: 8px 12px;
-  clip-path: polygon(
-    0% 35%, 15% 35%, 10% 15%, 35% 20%, 45% 0%, 55% 20%, 80% 12%, 75% 35%,
-    100% 38%, 85% 55%, 100% 75%, 75% 72%, 65% 100%, 50% 82%, 30% 98%,
-    32% 72%, 0% 75%, 12% 55%
-  );
-  transform: rotate(-7deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 110px;
-  height: 90px;
-  box-sizing: border-box;
-  animation: manga-subtle-pulse 3s infinite alternate ease-in-out;
-}
-
-.manga-burst-text {
-  font-family: var(--manga-font-comic);
-  font-size: 24px;
-  letter-spacing: 1px;
-  color: var(--manga-ink);
-  font-weight: 700;
-  text-align: center;
-  line-height: 1;
-  text-shadow: 1px 1px 0 #fff;
-}
-
-/* Center Panel: Halftone screentone dots + Jagged speech bubble */
-.manga-subpanel-center {
-  background-color: var(--manga-paper);
-  background-image: radial-gradient(var(--manga-ink) 1.25px, transparent 1.25px);
-  background-size: 7px 7px;
-}
-
-.manga-jagged-bubble {
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
-  padding: 10px 14px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  position: relative;
-  max-width: 130px;
-  text-align: center;
-}
-
-/* Jagged spikes around bubble via pseudo-element */
-.manga-jagged-bubble::after {
-  content: '';
+/* Soft ambient background radial glow */
+.leo-widget-glow-bg {
   position: absolute;
-  bottom: -9px;
-  left: 30%;
-  width: 0;
-  height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 9px solid var(--manga-ink);
-}
-
-.manga-bubble-text {
-  font-family: var(--manga-font-speech);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--manga-ink);
-  margin: 0;
-  text-transform: none;
-}
-
-/* Right Panel: Diagonal action hatch lines + thought bubble + ZAP! */
-.manga-subpanel-right {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--manga-paper),
-    var(--manga-paper) 5px,
-    rgba(0, 0, 0, 0.08) 5px,
-    rgba(0, 0, 0, 0.08) 8px
-  );
-  flex-direction: column;
-  gap: 8px;
-}
-
-.manga-ellipsis-bubble {
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 18px;
-  padding: 3px 14px 5px 14px;
-  font-family: var(--manga-font-comic);
-  font-size: 20px;
-  letter-spacing: 2px;
-  line-height: 1;
-  color: var(--manga-ink);
-  position: relative;
-}
-
-.manga-ellipsis-bubble::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 25%;
-  width: 5px;
-  height: 5px;
-  background: #fff;
-  border: var(--manga-border-thin);
-  border-radius: 50%;
-}
-
-.manga-mini-zap {
-  font-family: var(--manga-font-comic);
-  font-size: 26px;
-  letter-spacing: 1px;
-  color: var(--manga-ink);
-  transform: rotate(14deg);
-  text-shadow: 2px 2px 0 #ffffff;
-  margin-top: -4px;
-}
-
-@keyframes manga-subtle-pulse {
-  0% { transform: rotate(-7deg) scale(0.98); }
-  100% { transform: rotate(-5deg) scale(1.03); }
-}
-
-/* ==========================================================================
-   5. LOWER DIALOGUE & CHARACTER SECTION
-   ========================================================================== */
-.manga-dialogue-section {
-  padding: 14px 18px 10px 18px;
-  background: var(--manga-paper);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Character Header: "Satoru Gojo" */
-.manga-char-header {
-  text-align: center;
-  padding-bottom: 2px;
-}
-
-.manga-char-name {
-  font-family: var(--manga-font-serif);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: var(--manga-ink);
-  margin: 0;
-  line-height: 1.1;
-}
-
-.manga-char-flourish {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--manga-ink-soft);
-  margin-top: 1px;
-}
-
-.manga-flourish-symbol {
-  font-family: serif;
-  font-size: 14px;
-  color: var(--manga-ink-muted);
-}
-
-.manga-char-subtitle {
-  font-style: italic;
-  font-family: var(--manga-font-serif);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-/* Dialogue Content & Gojo Portrait Layout */
-.manga-dialogue-body {
-  display: flex;
-  align-items: stretch;
-  gap: 14px;
-  min-height: 120px;
-}
-
-.manga-dialogue-box {
-  flex: 1;
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
-  border-radius: 8px;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.manga-quote-text {
-  font-family: var(--manga-font-serif);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--manga-ink);
-  margin: 0;
-  word-break: break-word;
-  max-height: 110px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-/* Custom mini scrollbar */
-.manga-quote-text::-webkit-scrollbar {
-  width: 4px;
-}
-.manga-quote-text::-webkit-scrollbar-thumb {
-  background: #111;
-  border-radius: 2px;
-}
-
-/* Dynamic Typing Cursor */
-.leo-typing-cursor {
-  display: inline-block;
-  width: 7px;
-  height: 15px;
-  background: #111111;
-  vertical-align: middle;
-  margin-left: 4px;
-  animation: manga-cursor-blink 0.7s infinite;
-}
-
-@keyframes manga-cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Gojo Manga Ink Portrait */
-.manga-portrait-wrap {
-  width: 110px;
-  height: 120px;
-  flex-shrink: 0;
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: var(--manga-shadow-sm);
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-}
-
-.manga-portrait-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top center;
-  display: block;
-}
-
-/* ==========================================================================
-   6. BOTTOM AUDIO EQUALIZER & CONTROLS STRIP
-   ========================================================================== */
-.manga-bottom-bar {
-  border-top: var(--manga-border-thick);
-  background: var(--manga-paper);
-  padding: 10px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  position: relative;
-  border-bottom-left-radius: 9px;
-  border-bottom-right-radius: 9px;
-}
-
-/* User / Traveler Avatar Badge */
-.manga-user-badge {
-  width: 44px;
-  height: 44px;
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  position: relative;
-}
-
-.manga-user-avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Waveform Visualizer & Status Text */
-.manga-waveform-container {
-  flex: 1;
-  height: 42px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-}
-
-#leo-visualizer {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.manga-status-overlay {
-  position: absolute;
-  bottom: -2px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--manga-font-comic);
-  font-size: 13px;
-  letter-spacing: 0.6px;
-  color: var(--manga-ink-muted);
-  white-space: nowrap;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, var(--companion-glow-color) 0%, rgba(0, 240, 255, 0) 70%);
+  opacity: 0.45;
   pointer-events: none;
-  transition: color 0.2s ease;
+  z-index: 0;
+  transition: opacity 0.5s ease;
 }
 
-.manga-status-overlay.active {
-  color: #111111;
-  font-weight: 700;
+#leo-widget-container.listening .leo-widget-glow-bg {
+  opacity: 0.75;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.45) 0%, rgba(0, 229, 255, 0) 70%);
 }
 
-/* Manga Circular Action Buttons (Mic, Speaker, Interrupt) */
-.manga-action-group {
+#leo-widget-container.speaking .leo-widget-glow-bg {
+  opacity: 0.8;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.35) 0%, rgba(0, 229, 255, 0) 70%);
+}
+
+#leo-widget-container.thinking .leo-widget-glow-bg {
+  opacity: 0.65;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, rgba(0, 229, 255, 0) 70%);
+}
+
+/* ==========================================================================
+   3. TOP HEADER BAR
+   ========================================================================== */
+.leo-header-bar {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 14px 18px 6px 18px;
   flex-shrink: 0;
 }
 
-.manga-circle-btn {
-  background: var(--manga-paper-light);
-  border: var(--manga-border-mid);
-  box-shadow: 2.5px 2.5px 0px #111111;
+.leo-header-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.leo-status-indicator {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 6px #10B981;
+  transition: all 0.3s ease;
+}
+
+.leo-status-indicator.listening {
+  background: #00E5FF;
+  box-shadow: 0 0 8px #00E5FF;
+}
+
+.leo-status-indicator.thinking {
+  background: #F59E0B;
+  box-shadow: 0 0 8px #F59E0B;
+}
+
+.leo-status-indicator.speaking {
+  background: #C084FC;
+  box-shadow: 0 0 8px #C084FC;
+}
+
+.leo-status-indicator.disconnected {
+  background: #64748B;
+  box-shadow: none;
+}
+
+.leo-status-label {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--companion-text-dim);
+}
+
+.leo-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leo-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--companion-text-dim);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  transition: all 0.2s ease;
   padding: 0;
-  color: var(--manga-ink);
-  transition: all 0.18s ease;
-}
-
-.manga-circle-btn:hover {
-  background: var(--manga-paper-dark);
-  transform: translate(-1px, -1px);
-  box-shadow: 3.5px 3.5px 0px #111111;
-}
-
-.manga-circle-btn:active {
-  transform: translate(1.5px, 1.5px);
-  box-shadow: 1px 1px 0px #111111;
-}
-
-/* Big Microphone Button */
-.manga-mic-btn {
-  width: 48px;
-  height: 48px;
-}
-
-.manga-mic-btn svg {
-  width: 24px;
-  height: 24px;
-  stroke-width: 2.3;
-}
-
-.manga-mic-btn.active {
-  background: #111111;
-  color: #ffffff;
-  animation: manga-mic-pulse 1.4s infinite alternate ease-in-out;
-}
-
-.manga-mic-btn.muted {
-  background: #fee2e2;
-  color: #b91c1c;
-  border-color: #b91c1c;
-}
-
-@keyframes manga-mic-pulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
-}
-
-/* Speaker Button */
-.manga-speaker-btn {
-  width: 42px;
-  height: 42px;
-}
-
-.manga-speaker-btn svg {
-  width: 20px;
-  height: 20px;
-  stroke-width: 2.2;
-}
-
-.manga-speaker-btn.muted {
-  color: #94a3b8;
-  background: #f1f5f9;
-}
-
-/* Interrupt Button */
-.leo-interrupt-btn {
-  background: #ef4444;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  color: #ffffff;
-  font-family: var(--manga-font-comic);
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  padding: 5px 10px;
-  border-radius: 6px;
-  display: none; /* Shown only when AI is speaking */
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-.leo-interrupt-btn:hover {
-  background: #dc2626;
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px #111111;
-}
-
-/* ==========================================================================
-   7. OVERLAPPING "ZAP!" SOUND STICKER (Bottom-Left)
-   ========================================================================== */
-.manga-zap-sticker {
-  position: absolute;
-  bottom: -16px;
-  left: -14px;
-  background: var(--manga-paper-light);
-  border: var(--manga-border-thick);
-  box-shadow: var(--manga-shadow-sm);
-  font-family: var(--manga-font-comic);
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: var(--manga-ink);
-  padding: 1px 12px;
-  border-radius: 4px;
-  transform: rotate(-14deg);
-  pointer-events: none;
-  z-index: 10;
-  text-shadow: 1px 1px 0 #ffffff;
-  transition: transform 0.2s ease;
-}
-
-#leo-widget-container:hover .manga-zap-sticker {
-  transform: rotate(-10deg) scale(1.05);
-}
-
-/* ==========================================================================
-   8. COLLAPSIBLE TEXT INPUT ROW & SETTINGS DRAWER
-   ========================================================================== */
-.manga-text-input-drawer {
-  max-height: 0;
-  overflow: hidden;
-  padding: 0 18px;
-  background: var(--manga-paper-dark);
-  border-top: 0 solid #111;
-  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
-}
-
-.manga-text-input-drawer.visible {
-  max-height: 70px;
-  padding: 8px 18px;
-  border-top: var(--manga-border-mid);
-}
-
-.manga-text-input-group {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.manga-text-field {
-  flex: 1;
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-family: var(--manga-font-body);
-  font-size: 13px;
-  color: var(--manga-ink);
   outline: none;
 }
 
-.manga-text-field:focus {
-  border-color: #000;
-  box-shadow: 3px 3px 0px #111111;
+.leo-icon-btn:hover {
+  background: rgba(112, 243, 255, 0.15);
+  border-color: rgba(112, 243, 255, 0.35);
+  color: var(--companion-eye-color);
 }
 
-.manga-send-btn {
-  background: #111111;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 6px;
-  width: 36px;
-  height: 36px;
+.leo-icon-btn:focus-visible {
+  outline: 2px solid var(--companion-eye-color);
+  outline-offset: 1px;
+}
+
+.leo-icon-btn.active {
+  background: rgba(112, 243, 255, 0.2);
+  border-color: var(--companion-eye-color);
+  color: var(--companion-eye-color);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.leo-icon-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.leo-cc-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   4. FACE STAGE (Canvas with Anime Eyes & Spectrum Mouth)
+   ========================================================================== */
+.leo-face-stage {
+  position: relative;
+  z-index: 1;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  color: #ffffff;
-  padding: 0;
-  flex-shrink: 0;
-  transition: all 0.18s ease;
+  min-height: 190px;
+  width: 100%;
 }
 
-.manga-send-btn:hover {
-  background: #333333;
-  transform: translate(-1px, -1px);
-}
-
-.manga-send-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: currentColor;
-}
-
-/* Settings Panel (WebSocket Bridge Config) */
-.manga-settings-drawer {
-  max-height: 0;
-  overflow: hidden;
-  padding: 0 18px;
-  background: var(--manga-paper-dark);
-  border-top: 0 solid #111;
-  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
-  font-size: 12px;
-}
-
-.manga-settings-drawer.open {
-  max-height: 160px;
-  padding: 10px 18px;
-  border-top: var(--manga-border-mid);
-}
-
-.manga-settings-label {
-  font-family: var(--manga-font-comic);
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  color: var(--manga-ink);
-  margin-bottom: 4px;
+.leo-face-canvas {
+  width: 100%;
+  height: 100%;
   display: block;
+  pointer-events: none;
 }
 
-.manga-settings-row {
+/* ==========================================================================
+   5. SUBTITLE AREA (Optional fading transcript)
+   ========================================================================== */
+.leo-subtitle-area {
+  position: relative;
+  z-index: 2;
+  min-height: 28px;
+  max-height: 48px;
+  padding: 0 18px;
   display: flex;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.leo-subtitle-area.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.leo-subtitle-text {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(112, 243, 255, 0.35);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Inline notice banner (e.g. mic permission denial) */
+.leo-notice-banner {
+  position: relative;
+  z-index: 3;
+  margin: 4px 16px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  color: #fca5a5;
+  text-align: center;
+  animation: leoFadeIn 0.3s ease;
+}
+
+/* ==========================================================================
+   6. SLIDING TEXT INPUT DRAWER
+   ========================================================================== */
+.leo-text-drawer {
+  position: relative;
+  z-index: 2;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 16px;
+  transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s ease,
+              margin 0.3s ease;
+}
+
+.leo-text-drawer.visible {
+  max-height: 52px;
+  opacity: 1;
   margin-bottom: 6px;
 }
 
-.manga-settings-input {
+.leo-text-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(112, 243, 255, 0.2);
+  border-radius: 14px;
+  padding: 3px 5px 3px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leo-text-form:focus-within {
+  border-color: var(--companion-eye-color);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+}
+
+.leo-text-input {
   flex: 1;
-  background: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-family: monospace;
-  font-size: 11px;
-  color: var(--manga-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  font-size: 13px;
+  padding: 6px 0;
+}
+
+.leo-text-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.leo-send-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(112, 243, 255, 0.15);
+  border: 1px solid rgba(112, 243, 255, 0.3);
+  color: var(--companion-eye-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
   outline: none;
 }
 
-.manga-save-btn {
-  background: #111111;
-  color: #ffffff;
-  border: var(--manga-border-mid);
-  box-shadow: 2px 2px 0px #111111;
-  border-radius: 6px;
-  padding: 0 14px;
-  font-family: var(--manga-font-comic);
-  font-size: 14px;
-  letter-spacing: 0.5px;
+.leo-send-btn:hover {
+  background: var(--companion-eye-color);
+  color: #0b0f17;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+}
+
+.leo-send-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ==========================================================================
+   7. BOTTOM CONTROL BAR (Hero Mic Button)
+   ========================================================================== */
+.leo-bottom-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px 18px 18px;
+  flex-shrink: 0;
+}
+
+.leo-mic-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leo-mic-btn {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.9);
+  border: 2px solid var(--companion-border);
+  color: var(--companion-eye-color);
   cursor: pointer;
-  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  padding: 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 240, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
 }
 
-.manga-save-btn:hover {
-  background: #333333;
+.leo-mic-btn:hover {
+  transform: scale(1.06);
+  border-color: var(--companion-eye-color);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 240, 255, 0.45);
 }
 
-.manga-settings-hint {
-  font-size: 10px;
-  color: var(--manga-ink-muted);
-  line-height: 1.35;
-  margin: 0;
+.leo-mic-btn:active {
+  transform: scale(0.94);
+}
+
+.leo-mic-btn:focus-visible {
+  outline: 2px solid var(--companion-eye-color);
+  outline-offset: 4px;
+}
+
+.leo-mic-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.25s ease, stroke 0.25s ease;
+}
+
+/* Mic State: Listening (Glowing cyan fill + pulsing rings) */
+.leo-mic-btn.listening {
+  background: linear-gradient(135deg, #00E5FF 0%, #00B4D8 100%);
+  border-color: #70F3FF;
+  color: #0b0f17;
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
+}
+
+/* Mic State: Thinking */
+.leo-mic-btn.thinking {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  border-color: #FBBF24;
+  color: #0b0f17;
+  box-shadow: 0 0 26px rgba(245, 158, 11, 0.6);
+}
+
+/* Mic State: Speaking */
+.leo-mic-btn.speaking {
+  background: linear-gradient(135deg, #C084FC 0%, #A855F7 100%);
+  border-color: #E9D5FF;
+  color: #0b0f17;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.65);
+}
+
+/* Pulsing concentric rings while listening */
+.leo-mic-pulse-ring,
+.leo-mic-pulse-ring-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1.5px solid var(--companion-eye-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.leo-mic-btn.listening .leo-mic-pulse-ring {
+  animation: leoPulseRing 1.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.leo-mic-btn.listening .leo-mic-pulse-ring-2 {
+  animation: leoPulseRing 1.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1) 0.6s;
+}
+
+@keyframes leoPulseRing {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+@keyframes leoFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
-   9. CONVERSATION HISTORY DRAWER (Optional Scrollable Log)
+   8. RESPONSIVE DESIGN (Mobile bottom sheet)
    ========================================================================== */
-.manga-history-drawer {
-  max-height: 0;
-  overflow-y: auto;
-  background: #f6eedb;
-  border-top: 0 solid #111;
-  transition: max-height 0.25s ease, padding 0.25s ease, border-top-width 0.25s ease;
-  padding: 0 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+@media (max-width: 600px) {
+  :root {
+    --orb-size: 64px;
+  }
 
-.manga-history-drawer.open {
-  max-height: 150px;
-  padding: 10px 18px;
-  border-top: var(--manga-border-mid);
-}
+  #leo-launcher {
+    bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    right: max(16px, env(safe-area-inset-right, 16px));
+  }
 
-.manga-history-entry {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #111;
-  background: #ffffff;
-  box-shadow: 1.5px 1.5px 0 #111;
-}
+  .leo-launcher-face-canvas {
+    width: 48px;
+    height: 48px;
+  }
 
-.manga-history-entry.user {
-  align-self: flex-end;
-  background: #e0f2fe;
-}
+  .leo-launcher-tooltip {
+    right: 0;
+    bottom: calc(100% + 14px);
+    top: auto;
+    transform: translateY(8px) scale(0.92);
+    padding: 8px 14px;
+    max-width: calc(100vw - 32px);
+    white-space: normal;
+  }
 
-.manga-history-entry.ai {
-  align-self: flex-start;
-  background: #ffffff;
-}
+  .leo-launcher-tooltip.visible {
+    transform: translateY(0) scale(1);
+  }
 
-.manga-history-speaker {
-  font-family: var(--manga-font-comic);
-  font-size: 12px;
-  letter-spacing: 0.5px;
-  color: var(--manga-ink);
-  margin-bottom: 2px;
-}
+  .leo-tooltip-text {
+    font-size: 13.5px;
+  }
 
-/* ==========================================================================
-   10. RESPONSIVE MOBILE ADAPTATIONS
-   ========================================================================== */
-@media (max-width: 580px) {
+  .leo-tooltip-arrow {
+    right: 24px;
+    top: auto;
+    bottom: -6px;
+    transform: rotate(45deg);
+    border-top: none;
+    border-right: 1px solid rgba(112, 243, 255, 0.45);
+    border-bottom: 1px solid rgba(112, 243, 255, 0.45);
+  }
+
   #leo-widget-container {
     bottom: 12px;
     right: 12px;
     left: 12px;
     width: auto;
-    max-width: none;
-    max-height: calc(100vh - 24px);
-    border-radius: 10px;
+    max-width: calc(100vw - 24px);
+    height: 380px;
+    border-radius: 24px;
+    transform-origin: bottom center;
   }
 
-  .manga-title-banner h2 {
-    font-size: 20px;
+  .leo-face-stage {
+    min-height: 180px;
+  }
+}
+
+/* ==========================================================================
+   9. ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  #leo-launcher,
+  #leo-widget-container,
+  .leo-mic-btn,
+  .leo-text-drawer,
+  .leo-subtitle-area,
+  .leo-orb-sphere {
+    transition: none !important;
   }
 
-  .manga-storyboard-grid {
-    min-height: 110px;
+  #leo-launcher {
+    animation: none !important;
   }
 
-  .manga-burst-star {
-    width: 90px;
-    height: 75px;
+  .leo-orb-sonar-ring,
+  .leo-orb-ring,
+  .leo-particle,
+  .leo-orb-hologram-shimmer,
+  .leo-launcher-status-dot {
+    animation: none !important;
   }
 
-  .manga-burst-text {
-    font-size: 18px;
+  .leo-mic-btn.listening .leo-mic-pulse-ring,
+  .leo-mic-btn.listening .leo-mic-pulse-ring-2 {
+    animation: none !important;
+    display: none;
   }
 
-  .manga-bubble-text {
-    font-size: 11px;
+  .leo-widget-glow-bg {
+    transition: none !important;
   }
 
-  .manga-mini-zap {
-    font-size: 20px;
+  .leo-launcher-tooltip {
+    transition: opacity 0.25s ease !important;
+    transform: translateY(-50%) scale(1) !important;
   }
 
-  .manga-char-name {
-    font-size: 18px;
-  }
-
-  .manga-portrait-wrap {
-    width: 90px;
-    height: 100px;
-  }
-
-  .manga-quote-text {
-    font-size: 12px;
-  }
-
-  .manga-mic-btn {
-    width: 42px;
-    height: 42px;
-  }
-
-  .manga-speaker-btn {
-    width: 36px;
-    height: 36px;
-  }
-
-  .manga-zap-sticker {
-    font-size: 24px;
-    bottom: -12px;
-    left: -8px;
+  @media (max-width: 600px) {
+    .leo-launcher-tooltip {
+      transform: none !important;
+    }
   }
 }
