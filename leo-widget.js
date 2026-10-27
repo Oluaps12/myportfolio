@@ -37,6 +37,7 @@
   // Bridge & Audio Configuration (Cloudflare Tunnel Speech-to-Speech AI)
   // ==========================================================================
   const STORAGE_KEY = 'LEO_VOICE_WS_URL';
+  const GIST_RAW_URL = 'https://gist.githubusercontent.com/Oluaps12/d6bc7b29d6b1e0ce63aa23408eed9b2c/raw/leo_tunnel.json';
   const CLOUDFLARE_WS_URL = 'wss://attempts-lovers-emerald-putting.trycloudflare.com/ws/voice';
   const DEFAULT_WS_URL = CLOUDFLARE_WS_URL;
 
@@ -64,6 +65,29 @@
       if (!url.includes('/')) url = url + '/ws/voice';
       return url;
     }
+  }
+
+  // Dynamic Tunnel Discovery from GitHub Gist
+  async function resolveLatestWsUrl() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(GIST_RAW_URL + '?t=' + Date.now(), { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.url) {
+          const remoteUrl = normalizeWsUrl(data.url);
+          if (remoteUrl) {
+            wsUrl = remoteUrl;
+            return wsUrl;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Dynamic tunnel discovery fallback:', e);
+    }
+    return wsUrl || DEFAULT_WS_URL;
   }
 
   // State Management: 'idle' | 'listening' | 'thinking' | 'speaking' | 'disconnected'
@@ -765,7 +789,7 @@
   // ==========================================================================
   // 5. LLM & WEBSOCKET PROTOCOL (JSON Events & Token Streaming)
   // ==========================================================================
-  function connectWebSocket() {
+  async function connectWebSocket() {
     if (ws) {
       try {
         ws.close();
@@ -773,6 +797,9 @@
     }
 
     updateState('connecting');
+
+    // Discover the latest active tunnel URL from GitHub Gist
+    await resolveLatestWsUrl();
 
     try {
       ws = new WebSocket(wsUrl);
@@ -1619,6 +1646,7 @@
     startLauncherFaceRenderLoop();
     initAttentionSchedule();
     initCaptionSchedule();
+    resolveLatestWsUrl(); // Pre-fetch active dynamic tunnel in background
     console.log('AI Voice Companion initialized.');
   }
 
