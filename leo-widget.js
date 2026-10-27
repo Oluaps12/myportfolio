@@ -34,12 +34,11 @@
   const MOUTH_BAR_COUNT = 11;                      // Mouth audio spectrum bars (9-15)
 
   // ==========================================================================
-  // Default Bridge & Audio Configuration
+  // Bridge & Audio Configuration (Ngrok Port-Forwarded Speech-to-Speech AI)
   // ==========================================================================
   const STORAGE_KEY = 'LEO_VOICE_WS_URL';
-  const LOCAL_WS_URL = 'ws://127.0.0.1:8765/ws/voice';
   const NGROK_WS_URL = 'wss://alia-pseudocotyledonal-alison.ngrok-free.app/ws/voice';
-  const DEFAULT_WS_URL = LOCAL_WS_URL;
+  const DEFAULT_WS_URL = NGROK_WS_URL;
 
   const TARGET_SAMPLE_RATE = 16000;
   const FRAME_SAMPLES = 512; // 32ms at 16kHz
@@ -47,18 +46,20 @@
   function normalizeWsUrl(rawUrl) {
     if (!rawUrl) return DEFAULT_WS_URL;
     let url = rawUrl.trim();
-    url = url.replace('0.0.0.0', '127.0.0.1');
+    // Exclusively allow remote ngrok or secure tunnel; disallow local urls
+    if (url.includes('127.0.0.1') || url.includes('localhost') || url.includes('0.0.0.0')) {
+      return DEFAULT_WS_URL;
+    }
     if (url.startsWith('https://')) url = 'wss://' + url.slice(8);
-    else if (url.startsWith('http://')) url = 'ws://' + url.slice(7);
-    else if (!url.startsWith('ws://') && !url.startsWith('wss://')) {
-      url = (url.includes('ngrok') ? 'wss://' : 'ws://') + url;
+    else if (url.startsWith('http://')) url = 'wss://' + url.slice(7);
+    else if (!url.startsWith('wss://')) {
+      url = 'wss://' + url.replace(/^ws:\/\//, '');
     }
     try {
-      const parsed = new URL(url.replace('wss://', 'https://').replace('ws://', 'http://'));
+      const parsed = new URL(url.replace('wss://', 'https://'));
       let pathname = parsed.pathname;
       if (!pathname || pathname === '/' || pathname === '') pathname = '/ws/voice';
-      const proto = url.startsWith('wss://') ? 'wss://' : 'ws://';
-      return proto + parsed.host + pathname;
+      return 'wss://' + parsed.host + pathname;
     } catch (e) {
       if (!url.includes('/')) url = url + '/ws/voice';
       return url;
@@ -72,7 +73,16 @@
   let isSpeakerMuted = false;
   let showCaptions = true;
   let ws = null;
-  let wsUrl = localStorage.getItem(STORAGE_KEY) || DEFAULT_WS_URL;
+
+  // Purge any previously stored local bridge URLs to ensure only ngrok is used
+  let savedWsUrl = localStorage.getItem(STORAGE_KEY);
+  if (savedWsUrl && (savedWsUrl.includes('127.0.0.1') || savedWsUrl.includes('localhost') || savedWsUrl.includes('0.0.0.0'))) {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) { }
+    savedWsUrl = null;
+  }
+  let wsUrl = savedWsUrl ? normalizeWsUrl(savedWsUrl) : DEFAULT_WS_URL;
 
   // Web Audio Nodes
   let audioCtx = null;
@@ -1584,6 +1594,19 @@
       isTabVisible = !document.hidden;
     });
   }
+
+  // Expose helper on window to configure/update ngrok URL dynamically if needed
+  window.setLeoNgrokUrl = function (newNgrokUrl) {
+    if (!newNgrokUrl) return;
+    wsUrl = normalizeWsUrl(newNgrokUrl);
+    try {
+      localStorage.setItem(STORAGE_KEY, wsUrl);
+    } catch (e) { }
+    console.log('Updated Leo AI ngrok URL to:', wsUrl);
+    if (ws) {
+      connectWebSocket();
+    }
+  };
 
   // ==========================================================================
   // Initialization
