@@ -34,11 +34,11 @@
   const MOUTH_BAR_COUNT = 11;                      // Mouth audio spectrum bars (9-15)
 
   // ==========================================================================
-  // Bridge & Audio Configuration (Ngrok Port-Forwarded Speech-to-Speech AI)
+  // Bridge & Audio Configuration (Cloudflare Tunnel Speech-to-Speech AI)
   // ==========================================================================
   const STORAGE_KEY = 'LEO_VOICE_WS_URL';
-  const NGROK_WS_URL = 'wss://alia-pseudocotyledonal-alison.ngrok-free.app/ws/voice';
-  const DEFAULT_WS_URL = NGROK_WS_URL;
+  const CLOUDFLARE_WS_URL = 'wss://attempts-lovers-emerald-putting.trycloudflare.com/ws/voice';
+  const DEFAULT_WS_URL = CLOUDFLARE_WS_URL;
 
   const TARGET_SAMPLE_RATE = 16000;
   const FRAME_SAMPLES = 512; // 32ms at 16kHz
@@ -46,7 +46,7 @@
   function normalizeWsUrl(rawUrl) {
     if (!rawUrl) return DEFAULT_WS_URL;
     let url = rawUrl.trim();
-    // Exclusively allow remote ngrok or secure tunnel; disallow local urls
+    // Exclusively allow remote secure tunnel; disallow local urls
     if (url.includes('127.0.0.1') || url.includes('localhost') || url.includes('0.0.0.0')) {
       return DEFAULT_WS_URL;
     }
@@ -74,9 +74,9 @@
   let showCaptions = true;
   let ws = null;
 
-  // Purge any previously stored local bridge URLs to ensure only ngrok is used
+  // Purge any previously stored local bridge or old ngrok URLs to ensure Cloudflare tunnel is used
   let savedWsUrl = localStorage.getItem(STORAGE_KEY);
-  if (savedWsUrl && (savedWsUrl.includes('127.0.0.1') || savedWsUrl.includes('localhost') || savedWsUrl.includes('0.0.0.0'))) {
+  if (savedWsUrl && (savedWsUrl.includes('127.0.0.1') || savedWsUrl.includes('localhost') || savedWsUrl.includes('0.0.0.0') || savedWsUrl.includes('ngrok-free.app'))) {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch (e) { }
