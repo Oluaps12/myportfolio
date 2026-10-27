@@ -25,3 +25,4 @@ venv/
 ENV/
 *.log
 backend/rag_log.json
+tunnel_config.json
